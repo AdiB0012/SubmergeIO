@@ -8,9 +8,9 @@
 #define IN1 18
 #define IN2 19
 #define ENA 23
+#define PWM_CHANNEL 0
 
 const int pwmFreq = 30000;
-const int pwmChannel = 0;
 const int pwmResolution = 8;
 
 int pwmDutyCicle = 170;
@@ -18,6 +18,7 @@ int pwmDutyCicle = 170;
 BluetoothSerial SerialBT;
 
 void setupPWM();
+void setupPins();
 void handleBluetoothInput(String input);
 
 void setup()
@@ -26,7 +27,7 @@ void setup()
     SerialBT.begin("ESP32_BT");
     Serial.println("The device started, now you can pair it with bluetooth!");
 
-    pinMode(LED_BUILTIN, OUTPUT);
+    setupPins();
     setupPWM(); 
 }
 
@@ -38,9 +39,17 @@ void loop() {
 }
 
 void setupPWM() {
-    ledcSetup(pwmChannel, pwmFreq, pwmResolution);
-    ledcAttachPin(ENA, pwmChannel);
-    ledcWrite(pwmChannel, pwmDutyCicle);
+    ledcSetup((uint8_t)PWM_CHANNEL, pwmFreq, pwmResolution);
+    ledcAttachPin(ENA, (uint8_t)PWM_CHANNEL);
+    ledcWrite((uint8_t)PWM_CHANNEL, pwmDutyCicle);
+}
+
+void setupPins()
+{
+    pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+    pinMode(ENA, OUTPUT);
 }
 
 void handleBluetoothInput(String input) {
@@ -50,21 +59,23 @@ void handleBluetoothInput(String input) {
     char direction = input.charAt(0);
     int speed = input.substring(2).toInt();
 
-    if (speed < 0) speed = 0;
-    if (speed > 255) speed = 255;
+    if (speed < 0) {
+        speed = 0;
+    }
+    else if (speed > 255) {
+        speed = 255;
+    }
+    else {
+        ledcWrite((uint8_t)PWM_CHANNEL, speed);
+        Serial.println(speed);
+    }
 
     if (direction == 'F') {
         digitalWrite(IN1, HIGH);
         digitalWrite(IN2, LOW);
-        //digitalWrite(LED_BUILTIN, HIGH);
-        Serial.println(direction);
     }
     else if (direction == 'B') {
         digitalWrite(IN1, LOW);
         digitalWrite(IN2, HIGH);
-        //digitalWrite(LED_BUILTIN, LOW);
     }
-
-    ledcWrite(pwmChannel, speed);
-    Serial.println(speed);
 }
