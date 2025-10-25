@@ -1,0 +1,12 @@
+{
+  "name": "app_submerge",
+  "version": "1.0.0",
+  "description": "SubmergeIO application layer",
+  "authors": [
+    {
+      "name": ""
+    }
+  ],
+  "frameworks": ["arduino"],
+  "platforms": ["*"]
+}

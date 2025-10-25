@@ -1,0 +1,12 @@
+{
+  "name": "bluetooth",
+  "version": "1.0.0",
+  "description": "",
+  "authors": [
+    {
+      "name": ""
+    }
+  ],
+  "frameworks": ["arduino"],
+  "platforms": ["*"]
+}

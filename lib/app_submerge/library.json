@@ -1,0 +1,12 @@
+{
+  "name": "app_formula",
+  "version": "1.0.0",
+  "description": "Formula application layer",
+  "authors": [
+    {
+      "name": ""
+    }
+  ],
+  "frameworks": ["arduino"],
+  "platforms": ["*"]
+}
